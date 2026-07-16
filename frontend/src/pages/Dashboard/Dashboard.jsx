@@ -26,7 +26,7 @@ function Dashboard() {
 
         fetchUser();
 
-    }, []);
+    }, [navigate, setUser]);
 
     function handleLogout() {
 
