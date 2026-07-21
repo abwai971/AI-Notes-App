@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from src.auth.routes import auth_router
+from src.folders.routes import folder_router
 # from src.db.main import init_db
 
 
@@ -19,3 +20,4 @@ app = FastAPI(
     lifespan=life_span
     )
 app.include_router(auth_router,prefix=f"/api/{version}/auth",tags=["auth"])
+app.include_router(folder_router,prefix=f"/api/{version}/folders",tags=["Folders"])

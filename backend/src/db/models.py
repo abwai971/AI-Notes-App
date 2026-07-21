@@ -1,7 +1,8 @@
-from sqlmodel import Column, SQLModel, Field
+from sqlmodel import Column, SQLModel, Field, Relationship
 import sqlalchemy.dialects.postgresql as pg
 import uuid
 from datetime import datetime
+from typing import Optional, List
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
@@ -20,5 +21,25 @@ class User(SQLModel, table=True):
     role: str = Field(sa_column=Column(pg.VARCHAR, nullable=False, server_default="user"))
     password_hash: str = Field(exclude=True)
     is_active: bool = True
+    folders: List["Folder"] = Relationship(back_populates="user", sa_relationship_kwargs={"lazy": "selectin"})
     created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
     updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
+
+class Folder(SQLModel, table = True):
+    __tablename__ = "folders"
+    uid: uuid.UUID = Field(
+        sa_column=Column(
+            pg.UUID,
+            nullable=False,
+            primary_key=True,
+            default=uuid.uuid4
+        )
+    ) 
+    name: str
+    description: Optional[str] = None
+    color: str
+    user_uid: Optional[uuid.UUID] = Field(foreign_key="users.uid")
+    user: Optional["User"] = Relationship(back_populates="folders")
+    created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
+    updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
+
