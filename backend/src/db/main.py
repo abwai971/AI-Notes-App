@@ -10,6 +10,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 engine = create_async_engine(
     Config.DATABASE_URL,
     echo=True,
+    pool_pre_ping=True
 )
 
 async_session = async_sessionmaker(

@@ -4,6 +4,7 @@ import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Folders from "../pages/Folders/Folders";
+import Notes from "../pages/Notes/Notes";
 
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 
@@ -42,6 +43,15 @@ function AppRoutes() {
                     element={
                         <ProtectedRoute>
                             <Folders />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/notes"
+                    element={
+                        <ProtectedRoute>
+                            <Notes />
                         </ProtectedRoute>
                     }
                 />

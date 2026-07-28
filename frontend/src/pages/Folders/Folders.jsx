@@ -132,6 +132,7 @@ function Folders() {
                     <p>Organize your notes into focused spaces.</p>
                 </div>
                 <div className="header-actions">
+                    <Link className="text-link" to="/notes">Notes</Link>
                     <Link className="text-link" to="/dashboard">Dashboard</Link>
                     <button className="text-button" type="button" onClick={handleLogout}>Log out</button>
                 </div>

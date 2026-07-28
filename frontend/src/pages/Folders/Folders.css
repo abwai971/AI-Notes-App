@@ -1,195 +1,239 @@
 .folders-page {
     min-height: 100vh;
-    padding: 48px max(24px, calc((100% - 1100px) / 2));
+    padding: 0 max(24px, calc((100% - 1140px) / 2)) 64px;
+    background: radial-gradient(circle at 9% 0%, #dcfce7 0, transparent 25rem), #f8fafc;
     color: #172033;
 }
 
-.folders-header,
-.folders-content {
+.folders-header {
     display: flex;
-    gap: 32px;
+    align-items: center;
     justify-content: space-between;
+    gap: 28px;
+    min-height: 104px;
+    margin-bottom: 44px;
+    border-bottom: 1px solid rgba(203, 213, 225, 0.7);
 }
 
-.folders-header {
-    align-items: start;
-    margin-bottom: 36px;
-}
+.folders-header > div:first-child { padding-top: 44px; }
 
 .eyebrow {
-    color: #2563eb;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    color: #15803d;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
 .folders-header h1 {
-    margin: 6px 0 8px;
-    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 7px 0 8px;
+    font-size: clamp(2.2rem, 5vw, 3.55rem);
+    letter-spacing: -0.045em;
+    line-height: 1;
 }
 
-.folders-header p:not(.eyebrow),
-.folder-card p,
-.empty-state {
+.folders-header p:not(.eyebrow) {
     color: #64748b;
     line-height: 1.5;
 }
 
-.header-actions,
-.folder-actions {
+.header-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
-}
-
-.header-actions {
+    gap: 18px;
+    padding-top: 44px;
     white-space: nowrap;
 }
 
-.text-link,
-.text-button,
-.folder-actions button,
-.cancel-button {
+.folders-page .text-link,
+.folders-page .text-button,
+.folders-page .folder-actions button,
+.folders-page .cancel-button {
     border: 0;
     background: transparent;
-    color: #2563eb;
+    color: #475569;
     cursor: pointer;
     font: inherit;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 
-.text-button,
-.delete-button {
-    color: #dc2626 !important;
-}
+.folders-page .text-link:hover,
+.folders-page .folder-actions button:hover,
+.folders-page .cancel-button:hover { color: #15803d; }
+.folders-page .text-button,
+.folders-page .delete-button { color: #be123c !important; }
 
 .folders-content {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
     align-items: start;
+    gap: 28px;
 }
 
 .folder-form,
 .folders-list {
     border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    background: #fff;
-    padding: 24px;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.06);
 }
 
 .folder-form {
-    width: min(100%, 340px);
-    flex-shrink: 0;
+    position: sticky;
+    top: 24px;
+    padding: 26px;
 }
 
 .folder-form h2,
 .list-heading h2 {
-    margin-bottom: 22px;
+    margin-bottom: 7px;
+    color: #1e293b;
     font-size: 1.15rem;
 }
 
-.folder-form textarea {
-    resize: vertical;
-    min-height: 76px;
-    padding: 10px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font: inherit;
-}
-
-.color-input input {
-    width: 100%;
-    height: 42px;
-    padding: 3px;
-}
-
-.input-group small {
-    color: #64748b;
+.folder-form h2::after {
+    display: block;
+    margin-top: 7px;
+    color: #94a3b8;
+    content: "Give your notes a place to belong.";
+    font-size: 0.84rem;
     font-weight: 400;
 }
 
+.folder-form .input-group { margin-top: 22px; }
+.folder-form .input-group label,
+.folder-form .input-group > span { color: #475569; }
+
+.folder-form textarea {
+    resize: vertical;
+    min-height: 90px;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: #fff;
+    color: #334155;
+    font: inherit;
+}
+
+.folder-form textarea:focus { outline: 2px solid #bbf7d0; border-color: #22c55e; }
+
+.color-input input {
+    width: 100%;
+    height: 44px;
+    padding: 4px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: #fff;
+}
+
+.input-group small { color: #94a3b8; font-weight: 400; }
+
+.folder-form .btn {
+    margin-top: 6px;
+    background: #15803d;
+    box-shadow: 0 8px 15px rgba(21, 128, 61, 0.16);
+}
+
+.folder-form .btn:hover { background: #166534; }
+
 .form-error {
     margin: 0 0 14px;
-    color: #b91c1c;
+    color: #be123c;
     font-size: 0.9rem;
 }
 
-.cancel-button {
+.folders-page .cancel-button {
     display: block;
     width: 100%;
     margin-top: 14px;
 }
 
 .folders-list {
-    flex: 1;
-    min-height: 280px;
+    min-height: 390px;
+    padding: 26px;
 }
 
 .list-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 22px;
+    margin-bottom: 24px;
 }
 
-.list-heading h2 {
-    margin: 0;
-}
+.list-heading h2 { margin: 0; }
 
 .list-heading span {
-    min-width: 28px;
-    padding: 4px 8px;
+    min-width: 30px;
+    padding: 5px 9px;
     border-radius: 999px;
-    background: #eff6ff;
-    color: #2563eb;
+    background: #dcfce7;
+    color: #15803d;
     text-align: center;
-    font-weight: 700;
+    font-size: 0.86rem;
+    font-weight: 800;
 }
 
 .folder-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px;
 }
 
 .folder-card {
+    position: relative;
     overflow: hidden;
+    min-height: 164px;
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    border-radius: 14px;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.folder-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.08);
 }
 
 .folder-color {
     display: block;
-    height: 6px;
+    height: 7px;
 }
 
-.folder-card-content {
-    padding: 16px 16px 10px;
-}
+.folder-card-content { padding: 18px 17px 9px; }
+.folder-card h3 { margin-bottom: 7px; color: #1e293b; font-size: 1rem; }
 
-.folder-card h3 {
-    margin-bottom: 7px;
+.folder-card p,
+.empty-state {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
 .folder-actions {
-    padding: 0 16px 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 6px 17px 17px;
 }
 
-@media (max-width: 720px) {
-    .folders-page {
-        padding-top: 28px;
-    }
+.empty-state {
+    max-width: 300px;
+    padding: 48px 0;
+}
 
-    .folders-header,
-    .folders-content {
-        flex-direction: column;
-    }
+@media (max-width: 800px) {
+    .folders-header { align-items: end; min-height: 88px; }
+    .folders-header > div:first-child,
+    .header-actions { padding-top: 24px; }
+    .folders-content { grid-template-columns: 1fr; }
+    .folder-form { position: static; }
+}
 
-    .folders-header {
-        gap: 20px;
-    }
-
-    .folder-form {
-        width: 100%;
-    }
+@media (max-width: 560px) {
+    .folders-page { padding-bottom: 36px; }
+    .folders-header { align-items: start; flex-direction: column; gap: 16px; padding-bottom: 22px; }
+    .header-actions { padding-top: 0; }
+    .folders-list,
+    .folder-form { padding: 20px; }
 }
