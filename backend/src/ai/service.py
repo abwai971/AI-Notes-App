@@ -1,13 +1,13 @@
 from fastapi.exceptions import HTTPException
 from fastapi import status
 from sqlmodel.ext.asyncio.session import AsyncSession
-from .schemas import SummaryResponse, TagsResponse, QuestionRequest, QuestionResponse
+from .schemas import SummaryResponse, TagsResponse, QuestionRequest, QuestionResponse, SummaryTaskResponse
 from .provider import gemini_provider
 from .prompts import SUMMARY_PROMPT, TAG_PROMPT, QUESTION_PROMPT
 from src.notes.service import NoteService
 from  datetime import datetime, timezone
 import json
-
+from src.celery_task import generate_summary_task
 
 class AIService:
     def __init__(self):
@@ -23,27 +23,22 @@ class AIService:
             )
 
         if note.summary:
-            return SummaryResponse(summary=note.summary)
+            return SummaryTaskResponse(
+            task_id="",
+            status="SUCCESS",
+            summary=note.summary,
+        )
 
-        full_content = f"""
-                        Title:
-                        {note.title}
+        task = generate_summary_task.delay(
+        str(user_uid),
+        str(note_uid),
+        )
 
-                        Content:
-                        {note.content}
-                        """
-        prompt = SUMMARY_PROMPT.format(note_content=full_content)
-
-        generated_summary = await gemini_provider.generate(prompt)
-
-        note.summary = generated_summary
-        note.ai_updated_at = datetime.now(timezone.utc)
-
-        
-        await session.commit()
-        await session.refresh(note)
-
-        return SummaryResponse(summary=note.summary)
+        return SummaryTaskResponse(
+            task_id=task.id,
+            status="PENDING",
+            summary=None,
+        )
 
     async def generate_tags(self, user_uid: str, note_uid: str, session: AsyncSession):
         note = await self.note_service.get_note(user_uid, note_uid, session)

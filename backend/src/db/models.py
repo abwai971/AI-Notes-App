@@ -3,6 +3,8 @@ import sqlalchemy.dialects.postgresql as pg
 import uuid
 from datetime import datetime
 from typing import Optional, List
+from pgvector.sqlalchemy import Vector
+
 
 class User(SQLModel, table=True):
     __tablename__ = "users"
@@ -69,6 +71,7 @@ class Note(SQLModel, table = True):
     summary: str | None = Field(default=None, sa_column=Column(pg.TEXT, nullable=True))
     tags: list[str] | None = Field(default=None, sa_column=Column(pg.JSONB))
     ai_updated_at: datetime | None = Field(default=None, sa_column=Column(pg.TIMESTAMP(timezone=True), nullable=True))
+    embedding: list[float] | None = Field(default=None,sa_column=Column(Vector(768), nullable=True),)
     created_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
     updated_at: datetime = Field(sa_column=Column(pg.TIMESTAMP, default=datetime.now))
 

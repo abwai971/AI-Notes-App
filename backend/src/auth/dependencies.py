@@ -6,6 +6,7 @@ from fastapi.exceptions import HTTPException
 from sqlmodel.ext.asyncio.session import AsyncSession
 from .service import UserService
 from src.db.main import get_session
+from src.db.redis import token_in_blocklist
 
 
 user_service = UserService()
@@ -26,6 +27,11 @@ class Tokenbearer(HTTPBearer):
                 "resolution": "Please get new Token"
             })
         
+        if await token_in_blocklist(token_data['jti']):
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail={
+                "error": "This token is invalid or has been revoked",
+                "resolution": "Please get new Token"
+            })
         
         self.verify_token_data(token_data)
 

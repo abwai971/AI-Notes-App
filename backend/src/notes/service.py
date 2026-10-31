@@ -4,7 +4,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from .schemas import NoteCreateModel, NoteUpdateModel
 from src.db.models import Note, Folder
 from sqlmodel import select, desc
-
+from src.ai.provider import gemini_provider
 
 class NoteService:
     async def _get_user_folder(
@@ -49,6 +49,10 @@ class NoteService:
                 )
         new_note = Note(**note_data_dict)
         new_note.user_uid = user_uid
+        # Generate an embedding from the title and content.
+        text_to_embed = f"Title: {new_note.title}\nContent: {new_note.content}"
+        new_note.embedding = await gemini_provider.embed(text_to_embed)
+
         session.add(new_note)
         await session.commit()
         await session.refresh(new_note)
@@ -86,6 +90,10 @@ class NoteService:
             note_to_update.summary = None
             note_to_update.tags = None
             note_to_update.ai_updated_at = None
+            note_to_update.embedding = await gemini_provider.embed(
+                f"Title: {update_data_dict.get('title', note_to_update.title)}\n"
+                f"Content: {update_data_dict.get('content', note_to_update.content)}"
+            )
         for k, v in update_data_dict.items():
             setattr(note_to_update, k, v)
         await session.commit()
@@ -100,3 +108,12 @@ class NoteService:
         await session.commit()
         return 
     
+    
+    async def semantic_search(self, user_uid: str, query: str, session: AsyncSession, limit: int = 10,):
+        query_embedding = await gemini_provider.embed(f"Represent this note search query: {query}")
+        statement = (select(Note).where(Note.user_uid == user_uid, Note.is_archived.is_(False), Note.embedding.is_not(None),
+                    ).order_by(Note.embedding.cosine_distance(query_embedding)).limit(limit)
+        )
+        result = await session.exec(statement)
+        return result.all()
+

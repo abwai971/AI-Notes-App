@@ -5,7 +5,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.main import get_session
 from src.auth.dependencies import AccessTokenBearer
 from .service import NoteService
-
+from .schemas import SemanticSearchRequest
 
 note_router = APIRouter()
 access_token_bearer = AccessTokenBearer()
@@ -65,6 +65,19 @@ async def delete_note(note_uid: str,
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Note not found")
     else:
         return 
+
+#semantic search 
+@note_router.post("/search/semantic", response_model=list[Note])
+async def semantic_search_notes(search_data: SemanticSearchRequest, 
+                                session: AsyncSession = Depends(get_session), 
+                                token_data: dict = Depends(access_token_bearer),):
+    notes = await note_service.semantic_search(
+        user_uid=token_data["user"]["user_uid"],
+        query=search_data.query,
+        session=session,
+        limit=search_data.limit,
+    )
+    return notes
 
 
 

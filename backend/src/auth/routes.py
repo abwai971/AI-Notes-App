@@ -7,6 +7,7 @@ from .service import UserService
 from .dependencies import AccessTokenBearer, RefreshTokenBearer, get_current_user
 from src.core.utils import verify_password, create_access_token
 from datetime import timedelta,datetime
+from src.db.redis import add_jti_to_blocklist
 
 auth_router = APIRouter()
 user_service = UserService()
@@ -25,10 +26,15 @@ async def create_user_account(user_data: UserCreateModel, session: AsyncSession 
 
 #logout
 @auth_router.post("/logout")
-async def logout_user(_: dict = Depends(AccessTokenBearer())):
-    return {
-        "message": "Logged out successfully"
-    }
+async def logout_user(token_details: dict = Depends(AccessTokenBearer())):
+    jti = token_details['jti']
+    await add_jti_to_blocklist(jti)
+    return JSONResponse(
+        content = {
+            "message": "Logout successful"
+        },
+        status_code = status.HTTP_200_OK
+    )
 
 REFRESH_TOKEN_EXPIRY = 2
 #user login

@@ -5,6 +5,7 @@ from src.auth.routes import auth_router
 from src.folders.routes import folder_router
 from src.notes.routes import note_router
 from src.ai.routes import ai_router
+from src.db.redis import close_redis
 # from src.db.main import init_db
 
 
@@ -12,8 +13,11 @@ from src.ai.routes import ai_router
 async def life_span(app: FastAPI):
     print(f"Server is starting ...")
     # await init_db()
-    yield
-    print(f"Server is shutting down ...")
+    try:
+        yield
+    finally:
+        print("Server is shutting down ...")
+        await close_redis()
 
 version = "v1"
 app = FastAPI(
